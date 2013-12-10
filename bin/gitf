@@ -25,29 +25,8 @@ task_publish(){
   git push "$ORIGIN" "$1"
 }
 
-task_install(){
-  INSTALL_DIR="$HOME/.gitf"
-
-  if [ -d "$INSTALL_DIR" ]; then
-    cd $INSTALL_DIR && git pull
-  else
-    git clone https://github.com/xthom/gitf.git $INSTALL_DIR 
-    chmod +x $INSTALL_DIR/bin/gitf
-  fi
-
-  if [ -f "$HOME/.bash_profile" ]; then
-    PROFILE="$HOME/.bash_profile"
-  elif [ -f "$HOME/.profile" ]; then
-    PROFILE="$HOME/.profile"
-  fi
-
-  SOURCE_STR="[ -s \$HOME/.gitf/bin/gitf ] && alias gitf=\$HOME/.gitf/bin/gitf"
-  if ! grep -qc 'gitf' $PROFILE; then
-    echo "" >> "$PROFILE"
-    echo $SOURCE_STR >> "$PROFILE"
-  fi
-
-  echo "Gitf installed"
+task_update(){
+  // todo
 }
 
 require_root_branch(){
