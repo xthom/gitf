@@ -1,0 +1,69 @@
+#!/bin/sh
+
+ROOT_BRANCH="master"
+ORIGIN="origin"
+
+task_start(){
+  if [[ $# != 1 ]] ; 
+    then echo "Enter the name of the branch to open">&2 && exit 1; 
+  fi
+  require_root_branch
+  git checkout -b "$1"
+}
+
+task_finish(){
+  if [[ $# != 1 ]] ; 
+    then echo "Enter the name of the branch to close and finish">&2 && exit 1; 
+  fi
+  require_root_branch
+  git merge --no-ff "$1"
+  git tag -s "$1"
+  git branch -d "$1"
+}
+
+task_publish(){
+  git push "$ORIGIN" "$1"
+}
+
+task_install(){
+  INSTALL_DIR="$HOME/.gitf"
+
+  if [ -d "$INSTALL_DIR" ]; then
+    cd $INSTALL_DIR && git pull
+  else
+    git clone https://github.com/xthom/gitf.git $INSTALL_DIR 
+    chmod +x $INSTALL_DIR/bin/gitf
+  fi
+
+  if [ -f "$HOME/.bash_profile" ]; then
+    PROFILE="$HOME/.bash_profile"
+  elif [ -f "$HOME/.profile" ]; then
+    PROFILE="$HOME/.profile"
+  fi
+
+  SOURCE_STR="[ -s \$HOME/.gitf/bin/gitf ] && alias gitf=\$HOME/.gitf/bin/gitf"
+  if ! grep -qc 'gitf' $PROFILE; then
+    echo "" >> "$PROFILE"
+    echo $SOURCE_STR >> "$PROFILE"
+  fi
+
+  echo "Gitf installed"
+}
+
+require_root_branch(){
+  git checkout -q $$ROOT_BRANCH
+  if [[ $"`get_current_branch`" != "master" ]] ;
+    then echo "Failed to checkout $$ROOT_BRANCH">&2 && exit 1; 
+  fi
+}
+
+get_current_branch(){
+  git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
+}
+
+usage() {
+  echo "usage..."
+}
+
+([[ $# -eq 0 ]] && usage) || `task_$1 $2`
+
