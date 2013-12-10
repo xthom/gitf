@@ -30,9 +30,9 @@ task_update(){
 }
 
 require_root_branch(){
-  git checkout -q $$ROOT_BRANCH
+  git checkout -q $ROOT_BRANCH
   if [[ $"`get_current_branch`" != "master" ]] ;
-    then echo "Failed to checkout $$ROOT_BRANCH">&2 && exit 1; 
+    then echo "Failed to checkout $ROOT_BRANCH">&2 && exit 1; 
   fi
 }
 
