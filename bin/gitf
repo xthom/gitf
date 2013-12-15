@@ -22,7 +22,12 @@ task_finish(){
 }
 
 task_publish(){
-  git push "$ORIGIN" "$1"
+  BRANCH=$1
+  if [[ $# != 1 ]] ; then
+    BRANCH="`get_current_branch`";
+  fi
+  echo "Publishing branch $BRANCH to $ORIGIN"
+  git push "$ORIGIN" "$BRANCH"
 }
 
 task_update(){
