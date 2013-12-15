@@ -54,7 +54,29 @@ get_current_branch(){
   git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
 }
 
+# get_current_dir(){
+#   echo "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# }
+
+get_remote_name(){
+  git remote show
 }
 
-([[ $# -eq 0 ]] && usage) || `task_$1 $2`
+call_task(){
+  if [[ $"`function_exists task_$1`" == 1 ]] ; then
+    task_$1 $2
+  else 
+    echo "Task $1 does not exist!\n"
+    task_usage
+    exit 1
+  fi
+  exit 0
+}
+
+function_exists(){
+  declare -f -F $1 > /dev/null
+  if [[ $? == "1" ]]; then echo 0; else echo 1; fi;
+}
+
+([[ $# -eq 0 ]] && task_usage) || call_task $1 $2
 
