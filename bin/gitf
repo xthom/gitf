@@ -78,5 +78,5 @@ function_exists(){
   if [[ $? == "1" ]]; then echo 0; else echo 1; fi;
 }
 
-([[ $# -eq 0 ]] && task_usage) || call_task $1 $2
+if [[ $# -eq 0 ]]; then task_usage; else call_task $1 $2; fi
 
