@@ -26,6 +26,7 @@ install() {
   if ! grep -qc 'gitf' $PROFILE; then
     echo "" >> "$PROFILE"
     echo $SOURCE_STR >> "$PROFILE"
+    . $PROFILE
   fi
 
   if grep -qc 'gitf' $PROFILE; then
