@@ -34,6 +34,13 @@ task_update(){
   curl "https://raw.github.com/xthom/gitf/master/bin/install" | sh
 }
 
+task_usage() {
+  echo "Usage: start|publish|finish <branch_name>"
+  echo "\t- start a branch based on master"
+  echo "\t- commit your changes"
+  echo "\t- publish the branch to the origin"
+  echo "\t- after approvement or review finish the branch and push the changes\n"
+  exit 1
 }
 
 require_root_branch(){
@@ -47,8 +54,6 @@ get_current_branch(){
   git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
 }
 
-usage() {
-  echo "usage..."
 }
 
 ([[ $# -eq 0 ]] && usage) || `task_$1 $2`
