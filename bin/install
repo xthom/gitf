@@ -1,24 +1,46 @@
 #!/bin/sh
 
 INSTALL_DIR="$HOME/.gitf"
+REMOTE_BRANCH="master"
 
-if [ -d "$INSTALL_DIR" ]; then
-  cd $INSTALL_DIR && git pull
-else
-  git clone https://github.com/xthom/gitf.git $INSTALL_DIR 
-  chmod +x $INSTALL_DIR/bin/gitf
-fi
+install() {
+ 
+  if [ -d "$INSTALL_DIR" ]; then cd $INSTALL_DIR; fi
 
-if [ -f "$HOME/.bash_profile" ]; then
-  PROFILE="$HOME/.bash_profile"
-elif [ -f "$HOME/.profile" ]; then
-  PROFILE="$HOME/.profile"
-fi
+  if [ -d "$INSTALL_DIR/.git" ]; then
+    REMOTE_NAME="`get_remote_name`"
+    git pull -f $REMOTE_NAME $REMOTE_BRANCH
+  else
+    git clone --depth 1 --branch $REMOTE_BRANCH https://github.com/xthom/gitf.git $INSTALL_DIR 
+    chmod +x $INSTALL_DIR/bin/gitf
+    chmod +x $INSTALL_DIR/bin/install
+  fi
 
-SOURCE_STR="[ -s \$HOME/.gitf/bin/gitf ] && alias gitf=\$HOME/.gitf/bin/gitf"
-if ! grep -qc 'gitf' $PROFILE; then
-  echo "" >> "$PROFILE"
-  echo $SOURCE_STR >> "$PROFILE"
-fi
+  if [ -f "$HOME/.bash_profile" ]; then
+    PROFILE="$HOME/.bash_profile"
+  elif [ -f "$HOME/.profile" ]; then
+    PROFILE="$HOME/.profile"
+  fi
 
-echo "Gitf installed"
+  SOURCE_STR="[ -s \$HOME/.gitf/bin/gitf ] && alias gitf=\$HOME/.gitf/bin/gitf"
+  if ! grep -qc 'gitf' $PROFILE; then
+    echo "" >> "$PROFILE"
+    echo $SOURCE_STR >> "$PROFILE"
+  fi
+
+  if grep -qc 'gitf' $PROFILE; then
+    echo "Gitf installed"
+    exit 0
+  fi
+
+  echo "Gitf: error during installation"
+  exit 1
+
+}
+
+get_remote_name(){
+  git remote show
+}
+
+
+install
