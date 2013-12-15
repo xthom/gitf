@@ -17,7 +17,7 @@ task_finish(){
   fi
   require_root_branch
   git merge --no-ff "$1"
-  git tag -s "$1"
+  git tag -a "$1"
   git branch -d "$1"
 }
 
