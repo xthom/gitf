@@ -26,6 +26,9 @@ task_publish(){
   if [[ $# != 1 ]] ; then
     BRANCH="`get_current_branch`";
   fi
+  if [[ $BRANCH == "" ]]; then
+    echo "Not on a git branch!" && exit 1;
+  fi
   echo "Publishing branch $BRANCH to $ORIGIN"
   git push "$ORIGIN" "$BRANCH"
 }
