@@ -31,7 +31,9 @@ task_publish(){
 }
 
 task_update(){
-  curl https://raw.github.com/xthom/gitf/master/bin/install | sh
+  curl "https://raw.github.com/xthom/gitf/master/bin/install" | sh
+}
+
 }
 
 require_root_branch(){
