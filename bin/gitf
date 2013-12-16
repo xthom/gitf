@@ -7,7 +7,7 @@ task_start(){
   if [[ $# != 1 ]] ; 
     then echo "Enter the name of the branch to open">&2 && exit 1; 
   fi
-  require_root_branch
+  require_branch $ROOT_BRANCH
   git checkout -b "$1"
 }
 
@@ -15,7 +15,7 @@ task_finish(){
   if [[ $# != 1 ]] ; 
     then echo "Enter the name of the branch to close and finish">&2 && exit 1; 
   fi
-  require_root_branch
+  require_branch $ROOT_BRANCH
   git merge --no-ff "$1"
   git tag -a "$1"
   git branch -d "$1"
@@ -34,22 +34,38 @@ task_publish(){
 }
 
 task_update(){
-  curl "https://raw.github.com/xthom/gitf/master/bin/install" | sh
 }
 
 task_usage() {
-  echo "Usage: start|publish|finish <branch_name>"
-  echo "\t- start a branch based on master"
-  echo "\t- commit your changes"
-  echo "\t- publish the branch to the origin"
-  echo "\t- after approvement or review finish the branch and push the changes\n"
+  bold=`tput bold`
+  normal=`tput sgr0`
+  echo "\n${bold}GITF${normal} - a simple git dev-flow tool\n"
+  echo "Usage: ${bold}start|publish|update|finish${normal} <branch_name>"
+  echo "\t - start a branch based on master"
+  echo "\t - commit your changes"
+  echo "\t - publish the branch to the origin"
+  echo "\t - eventually update your working branch from master"
+  echo "\t - after approvement or review finish the branch and push the changes\n"
+  echo "Usage: ${bold}config${normal} update"
+  echo "\t - update gitf script to the latest version"
+  echo ""
   exit 1
 }
 
-require_root_branch(){
-  git checkout -q $ROOT_BRANCH
-  if [[ $"`get_current_branch`" != "master" ]] ;
-    then echo "Failed to checkout $ROOT_BRANCH">&2 && exit 1; 
+task_config(){
+  action=$1
+  case $action in
+    update)
+      curl "https://raw.github.com/xthom/gitf/master/bin/install" | sh ;;
+    *)
+      task_usage ;;
+  esac
+}
+
+require_branch(){
+  git checkout -q "$1"
+  if [[ $"`get_current_branch`" != "$1" ]] ;
+    then echo "Failed to checkout $1">&2 && exit 1; 
   fi
 }
 
@@ -67,7 +83,7 @@ get_remote_name(){
 
 call_task(){
   if [[ $"`function_exists task_$1`" == 1 ]] ; then
-    task_$1 $2
+    task_$1 "${@:2}"
   else 
     echo "Task $1 does not exist!\n"
     task_usage
@@ -81,5 +97,5 @@ function_exists(){
   if [[ $? == "1" ]]; then echo 0; else echo 1; fi;
 }
 
-if [[ $# -eq 0 ]]; then task_usage; else call_task $1 $2; fi
+if [[ $# -eq 0 ]]; then task_usage; else call_task "$@"; fi
 

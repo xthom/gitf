@@ -16,3 +16,8 @@ Tasks:
 	gitf publish [some_branch_name]
 	
 	gitf finish some_branch_name
+
+Update to latest version:
+-------------------------
+
+	gitf config update
