@@ -34,6 +34,17 @@ task_publish(){
 }
 
 task_update(){
+  BRANCH=$1
+  if [[ $# != 1 ]] ; then
+    BRANCH="`get_current_branch`";
+  fi
+  if [[ $BRANCH == "" ]]; then
+    echo "Not on a git branch!" && exit 1;
+  fi
+  require_branch "$ROOT_BRANCH"
+  git pull "$ORIGIN" "$ROOT_BRANCH"
+  require_branch "$BRANCH"
+  git merge --no-ff "$ROOT_BRANCH"
 }
 
 task_usage() {
