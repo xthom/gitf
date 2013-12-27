@@ -1,7 +1,7 @@
 #!/bin/sh
 
 INSTALL_DIR="$HOME/.gitf"
-REMOTE_BRANCH="latest"
+REMOTE_BRANCH="v1.0.0.beta"
 
 install() {
  
@@ -29,7 +29,7 @@ install() {
     . $PROFILE
   fi
 
-  npm install $INSTALL_DIR
+  npm install
 
   if grep -qc 'gitf' $PROFILE; then
     echo "Gitf installed"
