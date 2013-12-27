@@ -1,7 +1,7 @@
 #!/bin/sh
 
 INSTALL_DIR="$HOME/.gitf"
-REMOTE_BRANCH="v1.0.0.beta"
+REMOTE_BRANCH="latest"
 
 install() {
  
