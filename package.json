@@ -1,0 +1,28 @@
+{
+  "name": "gitf",
+  "version": "1.0.0",
+  "description": "A simple git flow control tool",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xthom/gitf.git"
+  },
+  "keywords": [
+    "git",
+    "flow",
+    "dev"
+  ],
+  "author": "Tomas Gluchman",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/xthom/gitf/issues"
+  },
+  "dependencies": {
+    "minimist": "0.0.5",
+    "colors": "~0.6.2",
+    "async": "~0.2.9"
+  }
+}
