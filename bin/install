@@ -29,6 +29,7 @@ install() {
     . $PROFILE
   fi
 
+  cd $INSTALL_DIR
   npm install
 
   if grep -qc 'gitf' $PROFILE; then
